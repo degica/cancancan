@@ -13,7 +13,9 @@ module CanCan
     end
 
     def find_resource_using_find_by
-      if resource_base.respond_to? 'find_by'
+      if resource_base.respond_to? "find_by_#{@options[:find_by]}!"
+        resource_base.send("find_by_#{@options[:find_by]}!", id_param)
+      elsif resource_base.respond_to? 'find_by'
         resource_base.send('find_by', @options[:find_by].to_sym => id_param)
       else
         resource_base.send(@options[:find_by], id_param)
